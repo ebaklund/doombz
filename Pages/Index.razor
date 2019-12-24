@@ -1,7 +1,93 @@
 ﻿@page "/"
 
-<h1>Hello, world!</h1>
+@inject IJSRuntime JsRuntime
 
-Welcome to your new app.
+<canvas height="@windowSize.Height"
+        width="@windowSize.Width"
+        @onmousedown="@OnMouseDown"
+        @onmousemove="@OnMouseMove"
+        @onmouseup="@OnMouseUp"
+        @onmouseout="@OnMouseOut"
+        @ontouchstart="@OnTouchStart"
+        @ontouchmove="@OnTouchMove"
+        @ontouchend="@OnTouchEnd"
+        @ontouchcancel="@OnTouchCancel"
+        @ref="@canvas" />
 
-<SurveyPrompt Title="How is Blazor working for you?" />
+@code {
+  ElementReference canvas;
+
+  WindowSize windowSize;
+
+  Canvas2DContext ctx;
+
+  protected override async Task OnInitializedAsync()
+  {
+    windowSize = await JsRuntime.InvokeAsync<WindowSize>("getWindowSize");
+    ctx = new Canvas2DContext(JsRuntime, canvas);
+  }
+
+  bool isPainting = false;
+  double x;
+  double y;
+
+  private void OnMouseDown(MouseEventArgs e)
+  {
+    x = e.ClientX;
+    y = e.ClientY;
+    isPainting = true;
+  }
+
+  private async Task OnMouseMove(MouseEventArgs e)
+  {
+    if (isPainting)
+    {
+      double eX = e.ClientX;
+      double eY = e.ClientY;
+
+      await ctx.DrawLine((long)x, (long)y, (long)eX, (long)eY);
+      x = eX;
+      y = eY;
+    }
+  }
+
+  private void OnMouseUp(MouseEventArgs e)
+  {
+    isPainting = false;
+  }
+
+  private void OnMouseOut(MouseEventArgs e)
+  {
+    isPainting = false;
+  }
+
+  private void OnTouchStart(TouchEventArgs e)
+  {
+    x = e.Touches[0].ClientX;
+    y = e.Touches[0].ClientY;
+    isPainting = true;
+  }
+
+  private async Task OnTouchMove(TouchEventArgs e)
+  {
+    if (isPainting)
+    {
+      double eX = e.Touches[0].ClientX;
+      double eY = e.Touches[0].ClientY;
+
+      await ctx.DrawLine((long)x, (long)y, (long)eX, (long)eY);
+      x = eX;
+      y = eY;
+    }
+  }
+
+  private void OnTouchEnd(TouchEventArgs e)
+  {
+    isPainting = false;
+  }
+
+  private void OnTouchCancel(TouchEventArgs e)
+  {
+    isPainting = false;
+  }
+}
