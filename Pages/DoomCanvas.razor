@@ -12,19 +12,25 @@
         @ontouchmove="@OnTouchMove"
         @ontouchend="@OnTouchEnd"
         @ontouchcancel="@OnTouchCancel"
-        @ref="@canvas" />
+        @ref="@canvasRef" />
 
 @code {
-  ElementReference canvas;
-
-  WindowSize windowSize;
-
-  Canvas2DContext ctx;
+  private ElementReference canvasRef;
+  private WindowSize windowSize;
 
   protected override async Task OnInitializedAsync()
   {
     windowSize = await JsRuntime.InvokeAsync<WindowSize>("getWindowSize");
-    ctx = new Canvas2DContext(JsRuntime, canvas);
+  }
+
+  public async Task DrawLine(long startX, long startY, long endX, long endY)
+  {
+      await JsRuntime.InvokeAsync<object>("DoomCanvas.drawLine", canvasRef, startX, startY, endX, endY);
+  }
+
+  public async Task SetStrokeStyleAsync(string strokeStyle)
+  {
+      await JsRuntime.InvokeAsync<object>("DoomCanvas.setContextPropertyValue", canvasRef, "strokeStyle", strokeStyle);
   }
 
   bool isPainting = false;
@@ -45,7 +51,7 @@
       double eX = e.ClientX;
       double eY = e.ClientY;
 
-      await ctx.DrawLine((long)x, (long)y, (long)eX, (long)eY);
+      await DrawLine((long)x, (long)y, (long)eX, (long)eY);
       x = eX;
       y = eY;
     }
@@ -75,7 +81,7 @@
       double eX = e.Touches[0].ClientX;
       double eY = e.Touches[0].ClientY;
 
-      await ctx.DrawLine((long)x, (long)y, (long)eX, (long)eY);
+      await DrawLine((long)x, (long)y, (long)eX, (long)eY);
       x = eX;
       y = eY;
     }
