@@ -1,35 +1,37 @@
 
-((window) => {
-  let canvasContextCache = {};
+let _displayCnv;
+let _renderCnv;
+let _displayCtx;
+let _renderCtx;
 
-  let getContext = (canvas) => {
-    if (!canvasContextCache[canvas]) {
-      canvasContextCache[canvas] = canvas.getContext('2d');
-    }
-    return canvasContextCache[canvas];
-  };
+window._DoomInterop = {
+  init: (displayCnv, renderCnv) =>
+  {
+    _displayCnv = displayCnv;
+    _renderCnv = renderCnv;
+    _displayCtx = _displayCnv.getContext('2d');
+    _renderCtx = _renderCnv.getContext('2d');
+  },
 
-  window._DoomInterop = {
-    getWindowSize: () => {
-      return { height: window.innerHeight, width: window.innerWidth };
-    },
+  drawLine: (x1, y1, x2, y2) =>
+  {
+    _renderCtx.lineJoin = 'round';
+    _renderCtx.lineWidth = 5;
+    _renderCtx.beginPath();
+    _renderCtx.moveTo(x1, y1);
+    _renderCtx.lineTo(x2, y2);
+    _renderCtx.closePath();
+    _renderCtx.stroke();
+  },
 
-    drawLine: (canvas, sX, sY, eX, eY) => {
-      let context = getContext(canvas);
+  setContextPropertyValue: (propertyName, propertyValue) =>
+  {
+    _renderCtx[propertyName] = propertyValue;
+  },
 
-      context.lineJoin = 'round';
-      context.lineWidth = 5;
-      context.beginPath();
-      context.moveTo(eX, eY);
-      context.lineTo(sX, sY);
-      context.closePath();
-      context.stroke();
-    },
-
-    setContextPropertyValue: (canvas, propertyName, propertyValue) => {
-      let context = getContext(canvas);
-
-      context[propertyName] = propertyValue;
-    }
-  };
-})(window);
+  flush: () =>
+  {
+    _displayCtx.drawImage(_renderCnv, 0, 0);
+  //  _renderCtx.clearRect(0, 0, _renderCnv.width, _renderCnv.height);
+  }
+};

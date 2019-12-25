@@ -3,9 +3,11 @@
 @inject IJSRuntime JsRuntime
 
 <canvas
-  @ref="@canvasRef"
-  width="@innerWidth"
-  height="@innerHeight"
+  @ref="@displayCnv"
+  top="@top"
+  left="@left"
+  width="@width"
+  height="@height"
   @onmousedown="@OnMouseDown"
   @onmousemove="@OnMouseMove"
   @onmouseup="@OnMouseUp"
@@ -16,26 +18,41 @@
   @ontouchcancel="@OnTouchCancel"
 />
 
-@code {
-  long innerWidth;
-  long innerHeight;
+<canvas
+  @ref="@renderCnv"
+  top="@top"
+  left="@left"
+  width="@width"
+  height="@height"
+  style="display:none"
+/>
 
-  private ElementReference canvasRef;
+@code {
+  private int top;
+  private int left;
+  private long width;
+  private long height;
+
+  private ElementReference displayCnv;
+  private ElementReference renderCnv;
 
   protected override async Task OnInitializedAsync()
   {
-    innerWidth = await JsRuntime.InvokeAsync<long>("_WindowInterop.innerWidth");
-    innerHeight = await JsRuntime.InvokeAsync<long>("_WindowInterop.innerHeight");
+    top = 0;
+    left = 0;
+    width = await JsRuntime.InvokeAsync<long>("_WindowInterop.innerWidth");
+    height = await JsRuntime.InvokeAsync<long>("_WindowInterop.innerHeight");
+    await JsRuntime.InvokeAsync<object>("_DoomInterop.init", displayCnv, renderCnv);
   }
 
   public async Task DrawLine(long startX, long startY, long endX, long endY)
   {
-      await JsRuntime.InvokeAsync<object>("_DoomInterop.drawLine", canvasRef, startX, startY, endX, endY);
+    await JsRuntime.InvokeAsync<object>("_DoomInterop.drawLine", startX, startY, endX, endY);
   }
 
-  public async Task SetStrokeStyleAsync(string strokeStyle)
+  public async Task Flush()
   {
-      await JsRuntime.InvokeAsync<object>("_DoomInterop.setContextPropertyValue", canvasRef, "strokeStyle", strokeStyle);
+    await JsRuntime.InvokeAsync<object>("_DoomInterop.flush");
   }
 
   bool isPainting = false;
@@ -57,6 +74,8 @@
       double eY = e.ClientY;
 
       await DrawLine((long)x, (long)y, (long)eX, (long)eY);
+      await Flush();
+
       x = eX;
       y = eY;
     }
@@ -87,6 +106,8 @@
       double eY = e.Touches[0].ClientY;
 
       await DrawLine((long)x, (long)y, (long)eX, (long)eY);
+      await Flush();
+
       x = eX;
       y = eY;
     }

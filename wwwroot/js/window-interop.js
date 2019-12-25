@@ -5,6 +5,7 @@ window._WindowInterop =
   {
     return window.innerWidth;
   },
+
   innerHeight: () =>
   {
     return window.innerHeight;
