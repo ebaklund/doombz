@@ -2,17 +2,19 @@
 
 @inject IJSRuntime JsRuntime
 
-<canvas height="@windowSize.Height"
-        width="@windowSize.Width"
-        @onmousedown="@OnMouseDown"
-        @onmousemove="@OnMouseMove"
-        @onmouseup="@OnMouseUp"
-        @onmouseout="@OnMouseOut"
-        @ontouchstart="@OnTouchStart"
-        @ontouchmove="@OnTouchMove"
-        @ontouchend="@OnTouchEnd"
-        @ontouchcancel="@OnTouchCancel"
-        @ref="@canvasRef" />
+<canvas
+  @ref="@canvasRef"
+  height="@windowSize.Height"
+  width="@windowSize.Width"
+  @onmousedown="@OnMouseDown"
+  @onmousemove="@OnMouseMove"
+  @onmouseup="@OnMouseUp"
+  @onmouseout="@OnMouseOut"
+  @ontouchstart="@OnTouchStart"
+  @ontouchmove="@OnTouchMove"
+  @ontouchend="@OnTouchEnd"
+  @ontouchcancel="@OnTouchCancel"
+/>
 
 @code {
   private ElementReference canvasRef;
@@ -25,12 +27,12 @@
 
   public async Task DrawLine(long startX, long startY, long endX, long endY)
   {
-      await JsRuntime.InvokeAsync<object>("DoomCanvas.drawLine", canvasRef, startX, startY, endX, endY);
+      await JsRuntime.InvokeAsync<object>("_DoomInterop.drawLine", canvasRef, startX, startY, endX, endY);
   }
 
   public async Task SetStrokeStyleAsync(string strokeStyle)
   {
-      await JsRuntime.InvokeAsync<object>("DoomCanvas.setContextPropertyValue", canvasRef, "strokeStyle", strokeStyle);
+      await JsRuntime.InvokeAsync<object>("_DoomInterop.setContextPropertyValue", canvasRef, "strokeStyle", strokeStyle);
   }
 
   bool isPainting = false;
