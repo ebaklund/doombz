@@ -15,11 +15,11 @@ public class Canvas2DContext
 
   public async Task DrawLine(long startX, long startY, long endX, long endY)
   {
-      await jsRuntime.InvokeAsync<object>("__blazorCanvasInterop.drawLine", canvasRef, startX, startY, endX, endY);
+      await jsRuntime.InvokeAsync<object>("DoomCanvas.drawLine", canvasRef, startX, startY, endX, endY);
   }
 
   public async Task SetStrokeStyleAsync(string strokeStyle)
   {
-      await jsRuntime.InvokeAsync<object>("__blazorCanvasInterop.setContextPropertyValue", canvasRef, "strokeStyle", strokeStyle);
+      await jsRuntime.InvokeAsync<object>("DoomCanvas.setContextPropertyValue", canvasRef, "strokeStyle", strokeStyle);
   }
 }

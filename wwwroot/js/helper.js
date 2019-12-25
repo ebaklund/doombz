@@ -13,7 +13,7 @@ window.getWindowSize = () => {
     return canvasContextCache[canvas];
   };
 
-  window.__blazorCanvasInterop = {
+  window.DoomCanvas = {
     drawLine: (canvas, sX, sY, eX, eY) => {
       let context = getContext(canvas);
 
