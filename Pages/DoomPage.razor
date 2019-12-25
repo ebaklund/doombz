@@ -1,6 +1,7 @@
 ﻿@page "/"
 
 @inject IJSRuntime JsRuntime
+@inject HttpClient Http
 
 <div><canvas
   @ref="@displayCnv"
@@ -43,6 +44,11 @@
     width = await JsRuntime.InvokeAsync<long>("_WindowInterop.innerWidth");
     height = await JsRuntime.InvokeAsync<long>("_WindowInterop.innerHeight");
     await JsRuntime.InvokeAsync<object>("_DoomInterop.init", displayCnv, renderCnv);
+
+    byte[] wadBytes = await Http.GetByteArrayAsync("doom1.bin"); // 404 if "doom1.wad"
+    Game game = new Game(new Wad(wadBytes));
+    game.Initialize();
+    //game.Loop(TimeSpan.FromMilliseconds(20));
   }
 
   public async Task DrawLine(long startX, long startY, long endX, long endY)
