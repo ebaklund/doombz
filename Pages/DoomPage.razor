@@ -2,7 +2,7 @@
 
 @inject IJSRuntime JsRuntime
 
-<canvas
+<div><canvas
   @ref="@displayCnv"
   top="@top"
   left="@left"
@@ -16,16 +16,16 @@
   @ontouchmove="@OnTouchMove"
   @ontouchend="@OnTouchEnd"
   @ontouchcancel="@OnTouchCancel"
-/>
+/></div>
 
-<canvas
+<div><canvas
   @ref="@renderCnv"
   top="@top"
   left="@left"
   width="@width"
   height="@height"
   style="display:none"
-/>
+/></div>
 
 @code {
   private int top;
