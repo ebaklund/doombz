@@ -1,8 +1,4 @@
 
-window.getWindowSize = () => {
-  return { height: window.innerHeight, width: window.innerWidth };
-};
-
 ((window) => {
   let canvasContextCache = {};
 
@@ -14,6 +10,10 @@ window.getWindowSize = () => {
   };
 
   window._DoomInterop = {
+    getWindowSize: () => {
+      return { height: window.innerHeight, width: window.innerWidth };
+    },
+
     drawLine: (canvas, sX, sY, eX, eY) => {
       let context = getContext(canvas);
 

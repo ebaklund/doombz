@@ -4,8 +4,8 @@
 
 <canvas
   @ref="@canvasRef"
-  height="@windowSize.Height"
-  width="@windowSize.Width"
+  width="@innerWidth"
+  height="@innerHeight"
   @onmousedown="@OnMouseDown"
   @onmousemove="@OnMouseMove"
   @onmouseup="@OnMouseUp"
@@ -17,12 +17,15 @@
 />
 
 @code {
+  long innerWidth;
+  long innerHeight;
+
   private ElementReference canvasRef;
-  private WindowSize windowSize;
 
   protected override async Task OnInitializedAsync()
   {
-    windowSize = await JsRuntime.InvokeAsync<WindowSize>("getWindowSize");
+    innerWidth = await JsRuntime.InvokeAsync<long>("_WindowInterop.innerWidth");
+    innerHeight = await JsRuntime.InvokeAsync<long>("_WindowInterop.innerHeight");
   }
 
   public async Task DrawLine(long startX, long startY, long endX, long endY)
