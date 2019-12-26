@@ -1,27 +1,27 @@
 namespace doombz
 {
-  public class WadInfo
+  public struct WadInfo
   {
-    private PinnedWadData _wadData;
+    private WadIterator _itr;
 
-    public WadInfo(PinnedWadData wadData)
+    public WadInfo(WadIterator itr)
     { 
-      _wadData = wadData;
+      _itr = itr;
     }
 
     public string Identification
-    { get {
-      return _wadData.GetString(0, 4); // Should be "IWAD" or "PWAD".
-    }}
+    {
+      get => WadMarshal.GetString(_itr + 0, 4); // Should be "IWAD" or "PWAD".
+    }
 
     public int NumLumps
-    { get {
-      return _wadData.ReadInt32(4);
-    }}
+    {
+      get => WadMarshal.GetInt32(_itr + 4);
+    }
 
     public int InfotableOfs
-    { get {
-      return _wadData.ReadInt32(8);
-    }}
-  };
+    {
+      get => WadMarshal.GetInt32(_itr + 8);
+    }
+  }
 }

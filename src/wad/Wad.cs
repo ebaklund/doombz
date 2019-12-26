@@ -4,17 +4,17 @@ namespace doombz
 {
   public class Wad
   {
-    private PinnedWadData _wadData;
     private WadInfo _wadInfo;
     private IDictionary<string, WadLump> _lumpMap;
 
-    public Wad (byte[] wadData)
+    public Wad (byte[] bytes)
     {
-      _wadData = new PinnedWadData(wadData);
-      _wadInfo = new WadInfo(_wadData);
+      var itr = new WadIterator(bytes);
+      _wadInfo = new WadInfo(itr);
       _lumpMap = new Dictionary<string, WadLump>();
+      var lumpList = new WadLumpList(itr + _wadInfo.InfotableOfs, _wadInfo.NumLumps);
 
-      foreach (var lump in new WadLumpList(_wadData, _wadInfo.InfotableOfs, _wadInfo.NumLumps))
+      foreach (var lump in lumpList)
       {
         string key = lump.Name;
 

@@ -5,26 +5,24 @@ namespace doombz
 {
   public class WadLumpList : IReadOnlyList<WadLump>
   {
-    private PinnedWadData _wadData;
-    private int _pos;
+    private WadIterator _itr;
     private int _count;
 
-    public WadLumpList(PinnedWadData wadData, int pos, int count)
+    public WadLumpList(WadIterator itr, int lumpCount)
     { 
-      _wadData = wadData;
-      _count = count;
-      _pos = pos;
+      _itr = itr;
+      _count = lumpCount;
     }
 
     public int Count
-    { get {
-      return _count;
-    }}
+    {
+      get => _count;
+    }
 
     public WadLump this[int i]
-    { get {
-      return new WadLump(_wadData, _pos + i * WadLump.Sizeof);
-    }}
+    {
+      get => new WadLump(_itr + i * WadLump.Sizeof);
+    }
 
     public IEnumerator<WadLump> GetEnumerator ()
     {

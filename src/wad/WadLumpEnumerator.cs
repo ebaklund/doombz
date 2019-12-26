@@ -36,13 +36,13 @@ namespace doombz
     }
 
     public WadLump Current
-    { get {
-      return _current;
-    }}
+    {
+      get => _current;
+    }
 
     object IEnumerator.Current
-    { get {
-      return Current;
-    }}
+    {
+      get => Current;
+    }
   };
 }
