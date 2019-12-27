@@ -27,6 +27,11 @@ namespace doombz
       get => _offset;
     }
 
+    public int MaxOffset
+    {
+      get => Bytes.Length - 1;
+    }
+
     public byte this[int i]
     {
       get => _bytes[_offset + i];
@@ -35,6 +40,11 @@ namespace doombz
     public static WadIterator operator + (WadIterator that, int step)
     {
       return new WadIterator(that, step);
+    }
+
+    public override string ToString ()
+    {
+      return "WadIterator { " + "Offset: " + Offset.ToString() + ", MaxOffset: " + MaxOffset.ToString() + " }";
     }
   }
 }

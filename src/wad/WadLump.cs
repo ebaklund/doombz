@@ -12,11 +12,17 @@ namespace doombz
     public WadLump(WadIterator itr)
     { 
       _itr = itr;
+    //  System.Console.WriteLine("WadLump.WadLump(): " + ToString());
     }
 
-    public int DataPos
+    public int DataOffset
     {
       get => WadMarshal.GetInt32(_itr + 0);
+    }
+
+    public WadIterator DataItr
+    {
+      get => new WadIterator(_itr.Bytes) + DataOffset;
     }
 
     public int Size
@@ -26,6 +32,16 @@ namespace doombz
     public string Name
     {
       get => WadMarshal.GetString(_itr + 8, 8);
+    }
+
+    public override string ToString ()
+    {
+      return "WadLump "
+        + "{ Name: " + Name
+        + ", DataOffset: \"" + DataOffset.ToString() + "\""
+        + ", Size: " + Size.ToString()
+        + ", DataItr: " + DataItr.ToString()
+        + " }";
     }
   }
 }

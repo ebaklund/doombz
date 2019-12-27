@@ -9,6 +9,8 @@ namespace doombz
 
     public Wad (byte[] bytes)
     {
+      System.Console.WriteLine("Wad.Wad()");
+
       var itr = new WadIterator(bytes);
       _wadInfo = new WadInfo(itr);
       _lumpMap = new Dictionary<string, WadLump>();

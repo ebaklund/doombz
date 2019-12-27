@@ -1,20 +1,25 @@
 using System;
 using System.Threading.Tasks;
+using Microsoft.JSInterop;
 
 namespace doombz
 {
   public class Game
   {
     Wad _wad;
+    Renderer _renderer;
 
-    public Game(Wad wad)
+    public Game(byte[] wadBytes, IJSRuntime jsRuntime)
     {
-      _wad = wad;
+      System.Console.WriteLine("Game.Game()");
+      _wad = new Wad(wadBytes);
+      _renderer = new Renderer(jsRuntime);
     }
 
-    public void Initialize()
+    public async Task Initialize()
     {
       System.Console.WriteLine("Game.Initialize()");
+      await _renderer.DrawLumpAsPatch(_wad.LumpMap["TITLEPIC"]);
     }
 
     public async Task Loop(TimeSpan interval)

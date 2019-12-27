@@ -4,7 +4,8 @@ let _renderCnv;
 let _displayCtx;
 let _renderCtx;
 
-window._DoomInterop = {
+window._CanvasInterop =
+{
   init: (displayCnv, renderCnv) =>
   {
     _displayCnv = displayCnv;
@@ -24,9 +25,16 @@ window._DoomInterop = {
     _renderCtx.stroke();
   },
 
-  setContextPropertyValue: (propertyName, propertyValue) =>
+  setColorTable: () =>
   {
-    _renderCtx[propertyName] = propertyValue;
+
+  },
+
+  drawPost: (arr, x, y) =>
+  {
+    //const ba = new ByteArray(str);
+    console.log(`CanvasInterop.drawPost(): typeof arr: ${typeof arr}, x: ${x}, y: ${y}`);
+    console.log(`CanvasInterop.drawPost(): length: ${arr.length}, x: ${x}, y: ${y}`);
   },
 
   flush: () =>

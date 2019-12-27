@@ -37,28 +37,39 @@
   private ElementReference displayCnv;
   private ElementReference renderCnv;
 
-  protected override async Task OnInitializedAsync()
+  private async Task InitInterop ()
   {
     top = 0;
     left = 0;
     width = await JsRuntime.InvokeAsync<long>("_WindowInterop.innerWidth");
     height = await JsRuntime.InvokeAsync<long>("_WindowInterop.innerHeight");
-    await JsRuntime.InvokeAsync<object>("_DoomInterop.init", displayCnv, renderCnv);
+    await JsRuntime.InvokeAsync<object>("_CanvasInterop.init", displayCnv, renderCnv);
+  }
+
+  private async Task StartGame ()
+  {
+System.Console.WriteLine("DoomPage.StartGame()");
 
     byte[] wadBytes = await Http.GetByteArrayAsync("doom1.bin"); // 404 if "doom1.wad"
-    Game game = new Game(new Wad(wadBytes));
-    game.Initialize();
-    //game.Loop(TimeSpan.FromMilliseconds(20));
+    Game game = new Game(wadBytes, JsRuntime);
+    await game.Initialize();
+    //_ = game.Loop(TimeSpan.FromMilliseconds(20));
+  }
+
+  protected override async Task OnInitializedAsync()
+  {
+    await InitInterop();
+    _ = StartGame();
   }
 
   public async Task DrawLine(long startX, long startY, long endX, long endY)
   {
-    await JsRuntime.InvokeAsync<object>("_DoomInterop.drawLine", startX, startY, endX, endY);
+    await JsRuntime.InvokeAsync<object>("_CanvasInterop.drawLine", startX, startY, endX, endY);
   }
 
   public async Task Flush()
   {
-    await JsRuntime.InvokeAsync<object>("_DoomInterop.flush");
+    await JsRuntime.InvokeAsync<object>("_CanvasInterop.flush");
   }
 
   bool isPainting = false;

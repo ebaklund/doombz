@@ -32,12 +32,12 @@ namespace doombz
 
     public int TopDelta
     {
-      get => (int) _itr[0];
+      get => WadMarshal.GetInt8(_itr + 0);
     }
 
     public int Length
     {
-      get => (int) _itr[1];
+      get => WadMarshal.GetInt8(_itr + 1);
     }
 
     public bool IsEnd
@@ -52,7 +52,16 @@ namespace doombz
 
     public WadPost Next
     {
-      get => new WadPost(_itr + 3 + Length);
+      get => new WadPost(_itr + 4 + Length);
+    }
+
+    public override string ToString ()
+    {
+      return "WadPost "
+        + "{ TopDelta: " + TopDelta.ToString()
+        + ", Length: " + Length.ToString()
+        + ", IsEnd: " + IsEnd.ToString()
+        + " }";
     }
   }
 }
